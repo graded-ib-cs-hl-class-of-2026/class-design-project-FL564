@@ -23,6 +23,14 @@ public class StudentList {
         return studentCount;
     }
     
+    public void shuffle() {
+        for (int i = studentCount - 1; i > 0; i--) {
+            int j = (int) (Math.random() * (i + 1));
+            String temp = students[i];
+            students[i] = students[j];
+            students[j] = temp;
+        }
+    }
 
 }
 
