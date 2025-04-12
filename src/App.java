@@ -18,6 +18,7 @@ public class App {
         io.output("Loading the groups...");
         studentList.shuffle();
         io.output("shuffled");
+        studentOutput(groupSize);
         
 
 
@@ -40,6 +41,23 @@ public class App {
 
         return studentList;
     }
+
+    public void studentOutput(int groupSize){
+        String[] students = studentList.getStudents();
+        for(int i = 0; i < studentList.getStudentCount(); i++){
+            if(i%groupSize == 0){
+                io.output("Group" + (i/groupSize + 1));
+                io.fileOutput("Group" + (i/groupSize + 1));
+            }
+
+            io.output(students[i]);
+            io.fileOutput(students[i]);   
+        }
+
+
+    }
+
+
     
     public static void main(String[] args) {
          new App().start();

@@ -44,4 +44,16 @@ public class Printer {
         return in.nextLine();
     }
 
+    public void fileOutput(String s){
+        try{
+            FileWriter writer = new FileWriter("randomizedHistory.txt", true);
+            writer.write(s + "\n");
+            writer.close();
+        } catch(IOException e){
+            output("There was an error"); 
+            e.printStackTrace();
+        }
+       
+    }
+
 }
