@@ -2,7 +2,12 @@ public class App {
     private Printer io = new Printer();
     private StudentList studentList = new StudentList();
 
-
+/**
+ * * The main method that starts the application.
+ * It initializes the student list, prompts the user for group size,
+ * shuffles the student list, and outputs the groups.
+ * It also handles file reading and writing for student data.
+ */
     public void start() {
         studentList = readStudentList("students.txt");
         if (studentList.getStudentCount() == 0) {
@@ -19,6 +24,8 @@ public class App {
         studentList.shuffle();
         io.output("shuffled");
         studentOutput(groupSize);
+
+        reRandomize(groupSize); // Call the reRandomize method after outputting the groups
         
 
 
@@ -55,6 +62,27 @@ public class App {
         }
 
 
+
+
+    }
+
+    //give the user the option to re randomize the groups 
+    public void reRandomize(int groupSize) {
+        while (true) {
+            io.output("Would you like to re-randomize the groups? (yes/no)");
+            String response = io.input();
+            if (response.equalsIgnoreCase("yes")) {
+                studentList.shuffle(); // Shuffle the student list again
+                io.output("shuffled");
+                io.output("Re-randomizing the groups...");
+                studentOutput(groupSize); // Use the same group size as before
+            } else if (response.equalsIgnoreCase("no")) {
+                io.output("Goodbye!");
+                break; // Exit the loop
+            } else {
+                io.output("Invalid input. Please enter 'yes' or 'no'.");
+            }
+        }
     }
 
 
