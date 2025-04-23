@@ -145,6 +145,57 @@ public class App {
     }
 
     /**
+     * Outputs the groups of students based on the specified group size.
+     * Allows the user to provide custom names for the groups.
+     * @param groupSize The number of students per group.
+     * @param useCustomNames Whether to use custom names for the groups.
+     */
+    public void studentOutputWithCustomNames(int groupSize, boolean useCustomNames) {
+        String[] students = studentList.getStudents(); // Get the list of students as an array
+
+        for (int i = 0; i < studentList.getStudentCount(); i++) {
+            if (i % groupSize == 0) { // Start a new group
+                int groupNumber = i / groupSize + 1;
+                String groupName;
+
+                // Check if a custom name already exists for this group
+                if (groupNames.containsKey(groupNumber)) {
+                    groupName = groupNames.get(groupNumber); // Reuse the saved name
+                } else if (useCustomNames) {
+                    // Prompt the user for a custom group name
+                    io.output("Enter a name for Group " + groupNumber + ":");
+                    groupName = io.input();
+                    groupNames.put(groupNumber, groupName); // Save the custom name
+                } else {
+                    // Use default group name
+                    groupName = "Group " + groupNumber;
+                    groupNames.put(groupNumber, groupName); // Save the default name
+                }
+
+                // Print the group name with a border
+                io.output("====================");
+                io.output(groupName + ":");
+                io.output("====================");
+                io.fileOutput("====================");
+                io.fileOutput(groupName + ":");
+                io.fileOutput("====================");
+                io.output(""); // Add a blank line for spacing
+                io.fileOutput(""); // Add a blank line for spacing
+            }
+
+            // Print the student name
+            io.output(students[i]);
+            io.fileOutput(students[i]);
+
+            // Add a blank line after the group ends
+            if ((i + 1) % groupSize == 0 || i == studentList.getStudentCount() - 1) {
+                io.output(""); // Add a blank line after the group ends
+                io.fileOutput(""); // Add a blank line in the file output
+            }
+        }
+    }
+
+    /**
      * Allows the user to re-randomize the groups and optionally exclude more students.
      * @param groupSize The number of students per group.
      */
@@ -175,8 +226,17 @@ public class App {
                 // Shuffle and re-randomize the groups
                 studentList.shuffle(); // Shuffle the student list again
                 io.output("Shuffled!");
+
+                // Ask if they want to provide custom names for the groups
+                io.output("Would you like to provide custom names for the groups? (yes/no)");
+                boolean useCustomNames = io.input().equalsIgnoreCase("yes");
+
+                if (useCustomNames) {
+                    groupNames.clear(); // Clear the group names to allow new custom names
+                }
+
                 io.output("Re-randomizing the groups...");
-                studentOutput(groupSize); // Use the same group size as before
+                studentOutputWithCustomNames(groupSize, useCustomNames); // Pass the custom name option
 
                 // Show excluded students after re-randomizing
                 if (!excludedStudents.isEmpty()) {
