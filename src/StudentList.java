@@ -1,16 +1,17 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class StudentList {
-    private List<String> students = new ArrayList<>(); // List to store the names of students
+    private String[] students = new String[10]; // Initial capacity of 10
+    private int studentCount = 0; // Tracks the number of students
 
     /**
      * Adds a student to the list.
      * @param student The name of the student to add.
      */
     public void addStudent(String student) {
-        students.add(student); // Add the student to the list
+        if (studentCount == students.length) {
+            resizeArray(); // Resize the array if it's full
+        }
+        students[studentCount++] = student; // Add the student and increment the count
     }
 
     /**
@@ -19,7 +20,17 @@ public class StudentList {
      * @return True if the student was successfully removed, false otherwise.
      */
     public boolean removeStudent(String student) {
-        return students.remove(student); // Remove the student and return true if successful
+        for (int i = 0; i < studentCount; i++) {
+            if (students[i].equals(student)) {
+                // Shift elements to the left to fill the gap
+                for (int j = i; j < studentCount - 1; j++) {
+                    students[j] = students[j + 1];
+                }
+                students[--studentCount] = null; // Decrement count and clear the last element
+                return true;
+            }
+        }
+        return false; // Student not found
     }
 
     /**
@@ -27,7 +38,7 @@ public class StudentList {
      * @return The number of students in the list.
      */
     public int getStudentCount() {
-        return students.size(); // Return the size of the student list
+        return studentCount;
     }
 
     /**
@@ -35,7 +46,11 @@ public class StudentList {
      * @return An array containing the names of all students.
      */
     public String[] getStudents() {
-        return students.toArray(new String[0]); // Convert the list to an array and return it
+        String[] result = new String[studentCount];
+        for (int i = 0; i < studentCount; i++) {
+            result[i] = students[i];
+        }
+        return result;
     }
 
     /**
@@ -43,7 +58,23 @@ public class StudentList {
      * Randomizes the order of the students for grouping purposes.
      */
     public void shuffle() {
-        Collections.shuffle(students); // Shuffle the list of students
+        for (int i = studentCount - 1; i > 0; i--) {
+            int j = (int) (Math.random() * (i + 1));
+            String temp = students[i];
+            students[i] = students[j];
+            students[j] = temp;
+        }
+    }
+
+    /**
+     * Resizes the array to double its current capacity.
+     */
+    private void resizeArray() {
+        String[] newArray = new String[students.length * 2];
+        for (int i = 0; i < students.length; i++) {
+            newArray[i] = students[i];
+        }
+        students = newArray;
     }
 }
 
